@@ -11,13 +11,15 @@ venv/
 env/
 ENV/
 py_agent/
+.venv
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.ipynb
 
 # Vector database files
 *.bin
-chroma/
+chroma_db/
 #doc files
 data/
 
@@ -28,3 +30,6 @@ data/
 # OS specific files
 .DS_Store
 EOL
+
+#folder
+sample/
