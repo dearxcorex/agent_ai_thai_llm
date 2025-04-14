@@ -2,7 +2,6 @@ from langchain_ollama import ChatOllama
 from pydantic import BaseModel, Field
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI,OpenAIEmbeddings
-from openai import OpenAI
 
 from langchain_docling.loader import ExportType
 from langchain_core.prompts import ChatPromptTemplate,SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate,PromptTemplate
@@ -26,12 +25,9 @@ from langgraph.graph import END, StateGraph, START
 #load env 
 from dotenv import load_dotenv
 import os
-import glob
 load_dotenv()
 
-# EMBED_MODEL_ID = "BAAI/bge-m3"
-# EXPORT_TYPE = ExportType.MARKDOWN
-# MAX_TOKENS = 1024
+
 
 #get all files in folder data_markdown
 files = "./data_markdown"
@@ -46,10 +42,9 @@ llm_ollama = ChatOllama(
 typhoon_70b = ChatOpenAI(
     model="scb10x/llama3.1-typhoon2-70b-instruct",
     base_url="https://openrouter.ai/api/v1",
-    api_key = "",
+    api_key = "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",
 
 )
-print(typhoon_70b)
 
 
 
@@ -74,17 +69,25 @@ chunker = RecursiveCharacterTextSplitter(
 doc_split = chunker.split_documents(documents)
 
 
+#TODO:  try to use Rerank
 
 
 #create vector store
-vectorstore = Chroma.from_documents(
-    documents=documents,
-    embedding=OpenAIEmbeddings(),
-    # persist_directory="chroma_db",
-)
+# vectorstore = Chroma.from_documents(
+#     documents=documents,
+#     embedding=OpenAIEmbeddings(),
+#     # persist_directory="chroma_db",
+# )
+from langchain_community.vectorstores import FAISS
+from langchain_cohere import CohereEmbeddings
+retriever = FAISS.from_documents(
+    documents=doc_split,
+    embedding=CohereEmbeddings(model="embed-multilingual-v3.0")
+
+).as_retriever(search_kwargs={"k":3})
 
 #create retriever
-retriever = vectorstore.as_retriever()
+# retriever = vectorstore.as_retriever()
 
 
 
@@ -120,13 +123,14 @@ system_prompt_msg = """คุณเป็นผู้เชี่ยวชาญ
     2. ชื่อเรื่อง
     3. คำขึ้นต้น (เรียน)
     4. เนื้อเรื่อง 
-        - เรื่องเดิม
+        - เรื่องเดิม ต้องขึ้นต้นด้าย ตามบันทึก
         - ข้อพิจารณา คือ ข้อมูลที่เป็นรูปแบบความคิดเห็น หรือ ข้อมูลที่เป็นรูปแบบการขออนุมัติ  (ถ้ามี) 
         - ถ้าเป็นการขออนุมัติ ให้เป็น ข้อพิจารณา เท่านั้น
         
     5. (ลงชื่อ, ตำแหน่ง)
    
-    ห้ามเขียน [ระบุข้อมูล] ให้คิดขึ้นเอง 
+    ห้ามเขียน [ระบุข้อมูล] 
+    - ตอบเป็นภาษาไทยทางการเท่านั้น
     -เขียนบันทึกข้อความโดยมีโครงสร้างหนังสือตามด้านบนและเว้นบรรทัดให้มีระเบียบ
     กรุณาสร้างหนังสือราชการโดยใช้รูปแบบ Markdown และรักษารูปแบบหนังสืออย่างเคร่งครัด:"""
 # prompt = PromptTemplate(
@@ -215,7 +219,7 @@ def web_search(state):
 
 
     template = """
-    คุณเป็นผู้เชี่ยวชาญในการค้นหาข้อมูลออนไลน์
+    คุณเป็นผู้เชี่ยวชาญในการค้นหาข้อมูลเอกสารที่เกี่ยวข้องกับคำถามของผู้ใช้
     คำขอ: {question}
 
     คำตอบ:
@@ -256,6 +260,7 @@ def decide_to_generate(state):
         print("---DECISION: NO ACTION---")
         return "no_action"
 
+#TODO : When llm output i want make angent to check document is quality good or bad
 
 
 #Graph 
@@ -296,7 +301,7 @@ app = workflow.compile()
 from pprint import pprint
 
 input_state_1 = {"question":"เขียนหนังสือบันทึกข้อความ ขออนุมัติเดินทางตรวจตามแผน"}
-input_state_2 = {"question":"เขียนหนังสือบันทึกข้อความ ขอจัดประชุมกับคณะกรรมการ ITU โดยมีรายละเอียด การป้องกัน แก๊ง call center ในประเทศเพื่อนบ้าน"}
+input_state_2 = {"question":"เขียนหนังสือเชิญ ประชุมกับคณะกรรมการ ITU โดยมีรายละเอียด การป้องกัน แก๊ง call center ในประเทศเพื่อนบ้าน"}
 for output in app.stream(input_state_2):
     for k,v in output.items():
         pprint(f"Node: '{k}':")
