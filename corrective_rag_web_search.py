@@ -3,17 +3,12 @@ from pydantic import BaseModel, Field
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI,OpenAIEmbeddings
 
-from langchain_docling.loader import ExportType
 from langchain_core.prompts import ChatPromptTemplate,SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate,PromptTemplate
 from langchain import hub
 from langchain_core.output_parsers import StrOutputParser
 
-from langchain_docling import DoclingLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from docling.document_converter import DocumentConverter
 from langchain_community.document_loaders import DirectoryLoader,UnstructuredMarkdownLoader
-from docling.pipeline.simple_pipeline import SimplePipeline
-from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
 from langchain_community.vectorstores import Chroma
 from langchain_community.tools import TavilySearchResults
 
@@ -31,9 +26,10 @@ load_dotenv()
 
 #get all files in folder data_markdown
 files = "./data_markdown"
-
+PATHUMMA_LLM_8B = "hf.co/dearxoasis/Pathumma_LLM_local:Q8_0"
+TYPHOON_3B = "hf.co/dearxoasis/llama3.2-typhoon2-offical_doc-3b:Q8_0"
 llm_ollama = ChatOllama(
-    model="hf.co/dearxoasis/llama3.2-typhoon2-offical_doc-3b:Q8_0",
+    model=PATHUMMA_LLM_8B,
             # model="hf.co/dearxoasis/llama-3-typhoon2_dearx:latest",
             temperature=0,
             
@@ -154,13 +150,6 @@ rag_chain = main_prompt | llm_ollama | StrOutputParser()
 web_search_tool = TavilySearchResults(k=3)
 
 
-class GraphState(TypedDict):
-    question:str
-    generation:str 
-    web_search:str 
-    documents:List[str]
-
-
 
 
 def retrieve(state):
@@ -260,10 +249,21 @@ def decide_to_generate(state):
         print("---DECISION: NO ACTION---")
         return "no_action"
 
-#TODO : When llm output i want make angent to check document is quality good or bad
+
+
+
+
+
 
 
 #Graph 
+class GraphState(TypedDict):
+    question:str
+    generation:str 
+    web_search:str 
+    documents:List[str]
+
+
 workflow = StateGraph(GraphState)
 
 #Add nodes 
@@ -302,7 +302,7 @@ from pprint import pprint
 
 input_state_1 = {"question":"เขียนหนังสือบันทึกข้อความ ขออนุมัติเดินทางตรวจตามแผน"}
 input_state_2 = {"question":"เขียนหนังสือเชิญ ประชุมกับคณะกรรมการ ITU โดยมีรายละเอียด การป้องกัน แก๊ง call center ในประเทศเพื่อนบ้าน"}
-for output in app.stream(input_state_2):
+for output in app.stream(input_state_1):
     for k,v in output.items():
         pprint(f"Node: '{k}':")
     pprint("\n---\n")
