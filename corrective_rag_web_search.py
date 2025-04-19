@@ -36,9 +36,9 @@ llm_ollama = ChatOllama(
          
 )
 typhoon_70b = ChatOpenAI(
-    model="scb10x/llama3.1-typhoon2-70b-instruct",
+    model=TYPHOON_3B,
     base_url="https://openrouter.ai/api/v1",
-    api_key = "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",
+    api_key = os.getenv("TYPHOON_API_KEY"),
 
 )
 
