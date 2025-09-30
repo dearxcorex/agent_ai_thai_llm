@@ -1,0 +1,56 @@
+# Advanced Agentic RAG System Dependencies
+# Python 3.10+
+
+# Core LangChain packages
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langgraph>=0.2.74
+
+# LLM Providers
+langchain-openai>=0.2.0
+langchain-ollama>=0.2.0
+langchain-cohere>=0.3.0
+
+# Vector Stores & Embeddings
+faiss-cpu>=1.8.0
+# faiss-gpu>=1.8.0  # Use this instead of faiss-cpu if you have GPU
+
+# Retrievers
+rank-bm25>=0.2.2  # BM25 sparse retrieval
+
+# Document Loaders
+unstructured[md]>=0.15.0  # Markdown support
+python-magic>=0.4.27  # For file type detection
+
+# Text Processing
+tiktoken>=0.7.0  # Token counting
+
+# Web Search
+tavily-python>=0.5.0
+
+# Evaluation Framework
+ragas>=0.2.0  # RAG evaluation metrics
+datasets>=3.0.0  # For RAGAS datasets
+
+# Data Processing
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+
+# Utilities
+tqdm>=4.66.0  # Progress bars
+
+# Optional: LangSmith for tracing
+# langsmith>=0.2.0
+
+# Development Dependencies (optional)
+# jupyter>=1.0.0
+# ipykernel>=6.29.0
+# matplotlib>=3.9.0
+# seaborn>=0.13.0
+
+# Note: Install with: uv pip install -r requirements.txt
