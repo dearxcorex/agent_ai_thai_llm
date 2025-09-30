@@ -139,10 +139,25 @@ ollama list | grep typhoon
 
 ### Basic Usage
 
-```python
+```bash
 # Run the main script
 uv run corrective_rag_web_search.py
+
+# You will be prompted to select a generation model:
+# ============================================================
+# SELECT GENERATION MODEL
+# ============================================================
+# 1. DeepSeek (Recommended - Better quality, cloud API)
+# 2. Ollama Typhoon 3B (Local model, faster but lower quality)
+# ============================================================
+# Enter your choice (1 or 2):
 ```
+
+**Model Comparison:**
+- **DeepSeek (Option 1)**: Quality score **0.75** - Complete documents, passes threshold ✅
+- **Ollama Typhoon 3B (Option 2)**: Quality score **0.65** - Faster but incomplete ⚠️
+
+See [MODEL_COMPARISON.md](MODEL_COMPARISON.md) for detailed comparison.
 
 ### Advanced Usage
 

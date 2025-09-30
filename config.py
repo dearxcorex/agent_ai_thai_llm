@@ -12,7 +12,7 @@ load_dotenv()
 
 # Local Ollama Models
 TYPHOON_3B = "hf.co/dearxoasis/llama3.2-typhoon2-offical_doc-3b:Q8_0"
-TYPHOON_3B_OPDATA = "hf.co/dearxoasis/llama3.2-typhoon2-3b-instruct_2705:Q8_0"
+TYPHOON_3B_OPDATA = "hf.co/dearxoasis/llama3.2-typhoon2-3b-instructOP:Q8_0"
 
 # DeepSeek Models (Use for all tasks since Typhoon 3B quality is too low)
 GENERATION_MODEL = "deepseek-chat"  # For generating Thai government documents

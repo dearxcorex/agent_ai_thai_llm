@@ -217,13 +217,35 @@ logger.info("✓ Hybrid retrieval system ready")
 
 # ==================== LLM Setup ====================
 
-# Generation LLM (DeepSeek - better quality than Typhoon 3B)
-llm_generation = ChatOpenAI(
-    model=app_config.GENERATION_MODEL,
-    base_url="https://api.deepseek.com",
-    api_key=app_config.DEEPSEEK_API_KEY,
-    temperature=app_config.GENERATION_TEMPERATURE
-)
+# Ask user which generation model to use
+print("\n" + "="*60)
+print("SELECT GENERATION MODEL")
+print("="*60)
+print("1. DeepSeek (Recommended - Better quality, cloud API)")
+print("2. Ollama Typhoon 3B (Local model, faster but lower quality)")
+print("="*60)
+
+while True:
+    choice = input("Enter your choice (1 or 2): ").strip()
+    if choice in ["1", "2"]:
+        break
+    print("Invalid choice. Please enter 1 or 2.")
+
+# Initialize generation LLM based on user choice
+if choice == "1":
+    print("✓ Using DeepSeek for generation\n")
+    llm_generation = ChatOpenAI(
+        model=app_config.GENERATION_MODEL,
+        base_url="https://api.deepseek.com",
+        api_key=app_config.DEEPSEEK_API_KEY,
+        temperature=app_config.GENERATION_TEMPERATURE
+    )
+else:
+    print("✓ Using Ollama Typhoon 3B for generation\n")
+    llm_generation = ChatOllama(
+        model=app_config.TYPHOON_3B_OPDATA,
+        temperature=app_config.GENERATION_TEMPERATURE
+    )
 
 # Grading and Optimization LLM (DeepSeek via OpenAI-compatible API)
 # Note: DeepSeek doesn't support structured output, so we'll use JSON mode
