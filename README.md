@@ -1,34 +1,37 @@
-# Thai Government Document RAG System
+# Context Engineered Thai Government Document RAG System
 
-Advanced Retrieval Augmented Generation system for generating Thai government official documents (หนังสือราชการ).
+Advanced Retrieval Augmented Generation system with context engineering for generating Thai government official documents (หนังสือราชการ).
 
 ## 📁 Project Structure
 
 ```
 .
-├── config/
-│   └── config.py              # Centralized configuration (models, thresholds, prompts)
+├── src/
+│   ├── agents/                 # Main agent implementations
+│   │   ├── context_engineered_rag_simple.py  # Working simplified RAG system
+│   │   └── local_model_integration.py       # Local model support
+│   │
+│   ├── processors/             # Core processing components
+│   │   └── context_engineering_system.py   # Context engineering logic
+│   │
+│   ├── utils/                  # Utility functions
+│   │   └── thai_formatting.py           # Thai formatting utilities
+│   │
+│   ├── validators/             # Validation systems
+│   │   └── document_validator.py       # Document structure validation
+│   │
+│   ├── config/                 # Configuration
+│   │   └── config.py                # System configuration
+│   │
+│   └── tests/                  # Test suite
+│       └── test_context_engineered_rag.py
 │
-├── data_markdown/             # Source documents for RAG retrieval
+├── main.py                     # Main entry point
+├── requirements.txt            # Dependencies
+├── data_markdown/              # Source documents for RAG retrieval
 │   └── *.md                   # Thai government document examples
 │
-├── docs/                      # Documentation
-│   ├── README_ADVANCED_RAG.md    # System architecture & usage
-│   ├── MODEL_COMPARISON.md       # DeepSeek vs Ollama Typhoon comparison
-│   ├── MIGRATION_TO_DEEPSEEK.md  # Migration guide
-│   └── CLAUDE.md                 # Project instructions for Claude Code
-│
-├── output/
-│   ├── results/               # Generated documents
-│   └── logs/                  # Execution logs
-│
-├── sample/                    # Sample/testing code
-│   ├── agentic_rag.py
-│   └── corrective_RAG.ipynb
-│
-├── corrective_rag_web_search.py  # Main RAG system
-├── evaluation.py              # RAGAS evaluation framework
-└── requirements.txt           # Python dependencies
+└── .env                      # Environment variables
 ```
 
 ## 🚀 Quick Start

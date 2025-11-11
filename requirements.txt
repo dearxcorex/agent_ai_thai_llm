@@ -1,4 +1,4 @@
-# Advanced Agentic RAG System Dependencies
+# Context Engineered RAG System Dependencies
 # Python 3.10+
 
 # Core LangChain packages
@@ -9,7 +9,6 @@ langgraph>=0.2.74
 
 # LLM Providers
 langchain-openai>=0.2.0
-langchain-ollama>=0.2.0
 langchain-cohere>=0.3.0
 
 # Vector Stores & Embeddings
@@ -29,13 +28,10 @@ tiktoken>=0.7.0  # Token counting
 # Web Search
 tavily-python>=0.5.0
 
-# Evaluation Framework
-ragas>=0.2.0  # RAG evaluation metrics
-datasets>=3.0.0  # For RAGAS datasets
-
 # Data Processing
 pandas>=2.2.0
 numpy>=1.26.0
+scikit-learn>=1.4.0
 
 # Environment & Configuration
 python-dotenv>=1.0.0
@@ -43,9 +39,6 @@ pydantic>=2.10.0
 
 # Utilities
 tqdm>=4.66.0  # Progress bars
-
-# Optional: LangSmith for tracing
-# langsmith>=0.2.0
 
 # Development Dependencies (optional)
 # jupyter>=1.0.0
